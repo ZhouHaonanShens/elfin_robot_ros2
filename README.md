@@ -9,20 +9,20 @@ Chinese version of the README -> please [click here](./README_cn.md)
   <img src="docs/images/elfin.png" />
 </p>
 
-This repository provides ROS2 support for the Elfin Robot. The recommend operating environment is on Ubuntu 20.04 with ROS Foxy. So far These packages haven't been tested in other environment.
+This repository provides ROS2 support for the Elfin Robot. The recommend operating environment is on Ubuntu 24.04 with ROS Jazzy. So far These packages haven't been tested in other environment.
 
 ### Installation
 
-#### Ubuntu 20.04 + ROS Foxy
+#### Ubuntu 24.04 + ROS Jazzy
 
 **Install some important dependent software packages:**
 ```sh
-$ sudo apt-get install ros-foxy-joint-trajectory-controller
-$ sudo apt-get install ros-foxy-controller-manager
-$ sudo apt-get install ros-foxy-trajectory-msgs
-$ sudo apt-get install ros-foxy-gazebo-ros2-control*
-$ sudo apt-get install ros-foxy-joint-state-controller
-$ sudo apt-get install ros-foxy-position-controllers
+$ sudo apt-get install ros-jazzy-joint-trajectory-controller
+$ sudo apt-get install ros-jazzy-controller-manager
+$ sudo apt-get install ros-jazzy-trajectory-msgs
+$ sudo apt-get install ros-jazzy-gazebo-ros2-control*
+$ sudo apt-get install ros-jazzy-joint-state-controller
+$ sudo apt-get install ros-jazzy-position-controllers
 ```
 
 **Install related software packages:**
@@ -40,7 +40,7 @@ Install/Upgrade MoveIt!:
 
 ```sh
 $ sudo apt-get update
-$ sudo apt-get install ros-foxy-moveit
+$ sudo apt-get install ros-jazzy-moveit
 ```
 
 

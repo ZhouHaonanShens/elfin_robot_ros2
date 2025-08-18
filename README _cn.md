@@ -8,20 +8,20 @@ If you don't speak chinese, please [click here](./README_english.md)
 </p>
 
 
-本文件夹中包含了多个为Elfin机器人提供ROS2支持的软件包。推荐的运行环境为 Ubuntu 20.04 + ROS2 Foxy, 其他环境下的运行情况没有测试过。
+本文件夹中包含了多个为Elfin机器人提供ROS2支持的软件包。推荐的运行环境为 Ubuntu 24.04 + ROS2 Jazzy, 其他环境下的运行情况没有测试过。
 
 ### 安装软件包
 
-#### Ubuntu 20.04 + ROS2 Foxy
+#### Ubuntu 24.04 + ROS2 Jazzy
 
 **安装一些重要的依赖包**
 ```sh
-$ sudo apt-get install ros-foxy-joint-trajectory-controller
-$ sudo apt-get install ros-foxy-controller-manager
-$ sudo apt-get install ros-foxy-trajectory-msgs
-$ sudo apt-get install ros-foxy-gazebo-ros2-control*
-$ sudo apt-get install ros-foxy-joint-state-controller
-$ sudo apt-get install ros-foxy-position-controllers
+$ sudo apt-get install ros-jazzy-joint-trajectory-controller
+$ sudo apt-get install ros-jazzy-controller-manager
+$ sudo apt-get install ros-jazzy-trajectory-msgs
+$ sudo apt-get install ros-jazzy-gazebo-ros2-control*
+$ sudo apt-get install ros-jazzy-joint-state-controller
+$ sudo apt-get install ros-jazzy-position-controllers
 ```
 
 **安装一些依赖包:**
@@ -36,7 +36,7 @@ $ sudo pip3 install transforms3d
 安装/升级MoveIt!：
 ```sh
 $ sudo apt-get update
-$ sudo apt-get install ros-foxy-moveit
+$ sudo apt-get install ros-jazzy-moveit
 ```
 
 **安装本软件包**
