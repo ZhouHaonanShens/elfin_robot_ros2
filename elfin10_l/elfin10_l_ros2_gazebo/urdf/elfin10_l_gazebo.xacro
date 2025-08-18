@@ -7,8 +7,7 @@
     use_real_hardware:=true">
 
     <gazebo>
-      <plugin filename="libgazebo_ros2_control.so" name="gazebo_ros2_control">
-        <robot_sim_type>gazebo_ros2_control/GazeboSystem</robot_sim_type>
+      <plugin filename="libgz_ros2_control.so" name="gazebo_ros2_control">
         <parameters>$(find elfin10_l_ros2_gazebo)/config/elfin_arm_controller.yaml</parameters>
       </plugin>
     </gazebo>
@@ -26,7 +25,7 @@
           </xacro:if>
 
           <xacro:unless value="${use_fake_hardware}">
-            <plugin>gazebo_ros2_control/GazeboSystem</plugin>
+            <plugin>gz_ros2_control/GazeboSimSystem</plugin>
           </xacro:unless>
         </xacro:unless>
       </hardware>

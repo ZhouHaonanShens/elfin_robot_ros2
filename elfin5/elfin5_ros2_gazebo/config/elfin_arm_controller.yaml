@@ -20,8 +20,8 @@ controller_manager:
         - elfin_joint5
         - elfin_joint6
 
-    joint_state_controller:
-      type: joint_state_controller/JointStateController
+    joint_state_broadcaster:
+      type: joint_state_broadcaster/JointStateBroadcaster
 
 elfin_arm_controller:
   ros__parameters:
