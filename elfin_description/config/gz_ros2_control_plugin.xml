@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<library path="libgz_ros2_control-system">
+  <!-- Register gz_ros2_control as an alias for the actual plugin -->
+  <class name="gz_ros2_control" 
+         type="gz_ros2_control::GazeboSimROS2ControlPlugin">
+    <description>
+      Alias for gz_ros2_control plugin to work around Gazebo plugin loading issue
+    </description>
+  </class>
+</library>
