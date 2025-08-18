@@ -48,7 +48,7 @@ ElfinBasicAPI::ElfinBasicAPI(const rclcpp::Node::SharedPtr& node,moveit::plannin
     teleop_api_=new ElfinTeleopAPI(local_nh_,group, action_name, planning_scene_monitor);
     motion_api_=new ElfinMotionAPI(local_nh_,group, planning_scene_monitor);
     auto  callback_group_service_ = local_nh_->create_callback_group(rclcpp::CallbackGroupType::MutuallyExclusive);
-    local_nh_->set_on_parameters_set_callback(std::bind(&ElfinBasicAPI::dynamicReconfigureCallback, this, std::placeholders::_1));
+    // local_nh_->set_on_parameters_set_callback(std::bind(&ElfinBasicAPI::dynamicReconfigureCallback, this, std::placeholders::_1)); // TODO: Update to new parameter callback API
 
     set_ref_link_server_=local_nh_->create_service<elfin_robot_msgs::srv::SetString>("set_reference_link", std::bind(&ElfinBasicAPI::setRefLink_cb,this,std::placeholders::_1,std::placeholders::_2));
     set_end_link_server_=local_nh_->create_service<elfin_robot_msgs::srv::SetString>("set_end_link", std::bind(&ElfinBasicAPI::setEndLink_cb,this,std::placeholders::_1,std::placeholders::_2));
@@ -371,8 +371,8 @@ bool ElfinBasicAPI::stopActCtrlrs(const std::shared_ptr<std_srvs::srv::SetBool::
 
         // Stop active controllers
         auto switch_controller_request = std::make_shared<controller_manager_msgs::srv::SwitchController::Request>();
-        switch_controller_request->start_controllers.clear();
-        switch_controller_request->stop_controllers=controllers_to_stop;
+        switch_controller_request->activate_controllers.clear();
+        switch_controller_request->deactivate_controllers=controllers_to_stop;
         switch_controller_request->strictness=switch_controller_request->STRICT;
 
         auto switch_control_res = switch_controller_client_->async_send_request(switch_controller_request);
@@ -402,9 +402,9 @@ bool ElfinBasicAPI::startElfinCtrlr(const std::shared_ptr<std_srvs::srv::SetBool
     // Start active controllers
     auto switch_controller_request = std::make_shared<controller_manager_msgs::srv::SwitchController::Request>();
 
-    switch_controller_request->start_controllers.clear();
-    switch_controller_request->start_controllers.push_back(elfin_controller_name_);
-    switch_controller_request->stop_controllers.clear();
+    switch_controller_request->activate_controllers.clear();
+    switch_controller_request->activate_controllers.push_back(elfin_controller_name_);
+    switch_controller_request->deactivate_controllers.clear();
     switch_controller_request->strictness=switch_controller_request->STRICT;
 
     auto switch_controller_res = switch_controller_client_->async_send_request(switch_controller_request);

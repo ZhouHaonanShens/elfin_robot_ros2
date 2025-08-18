@@ -53,7 +53,7 @@ int main(int argc, char** argv)
     rclcpp::Node::SharedPtr base_node = rclcpp::Node::make_shared("base_api_node");
 
     move_group_cb_queue = move_group_nh->create_callback_group(rclcpp::CallbackGroupType::Reentrant);
-    rclcpp::executors::MultiThreadedExecutor executor(rclcpp::executor::ExecutorArgs(),5);
+    rclcpp::executors::MultiThreadedExecutor executor;
     executor.add_node(move_group_nh);
     std::thread([&executor]() { executor.spin(); }).detach(); 
 

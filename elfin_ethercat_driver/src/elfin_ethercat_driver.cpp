@@ -728,6 +728,10 @@ bool ElfinEtherCATDriver::disableRobot_cb(const std::shared_ptr<std_srvs::srv::S
         usleep(100000);
         clock_gettime(CLOCK_REALTIME, &tick);
     }
+    // Should never reach here, but add return for compiler
+    resp->success=false;
+    resp->message="Unexpected error in disableRobot";
+    return false;
 }
 
 bool ElfinEtherCATDriver::clearFault_cb(const std::shared_ptr<std_srvs::srv::SetBool::Request> req, const std::shared_ptr<std_srvs::srv::SetBool::Response> resp)
@@ -776,6 +780,10 @@ bool ElfinEtherCATDriver::clearFault_cb(const std::shared_ptr<std_srvs::srv::Set
         usleep(100000);
         clock_gettime(CLOCK_REALTIME, &tick);
     }
+    // Should never reach here, but add return for compiler
+    resp->success=false;
+    resp->message="Unexpected error in clearFault";
+    return false;
 }
 
 bool ElfinEtherCATDriver::recognizePosition_cb(const std::shared_ptr<std_srvs::srv::SetBool::Request> req, const std::shared_ptr<std_srvs::srv::SetBool::Response> resp)
@@ -811,7 +819,8 @@ bool ElfinEtherCATDriver::recognizePosition_cb(const std::shared_ptr<std_srvs::s
 
 void ElfinEtherCATDriver::error_log(int line, std::string log, std::string log_param)
 {
-    RCLCPP_ERROR(ed_nh_->get_logger(),"line: %d, %s"+log,line,log_param);
+    std::string format_str = "line: %d, %s" + log;
+    RCLCPP_ERROR(ed_nh_->get_logger(), format_str.c_str(), line, log_param.c_str());
 }
 
 int32_t ElfinEtherCATDriver::getIntFromStr(std::string str)

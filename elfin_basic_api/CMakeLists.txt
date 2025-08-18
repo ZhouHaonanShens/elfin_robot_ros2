@@ -26,7 +26,7 @@ find_package(rclcpp REQUIRED)
 find_package(rclpy REQUIRED)
 find_package(std_msgs REQUIRED)
 find_package(moveit_core REQUIRED)
-find_package(moveit_planners_ompl REQUIRED)
+find_package(moveit_planners REQUIRED)
 find_package(moveit_ros_planning REQUIRED)
 find_package(moveit_ros_planning_interface REQUIRED)
 find_package(rclcpp_action REQUIRED)
@@ -36,6 +36,7 @@ find_package(elfin_robot_msgs REQUIRED)
 find_package(std_srvs REQUIRED)
 find_package(tf2 REQUIRED)
 find_package(tf2_ros REQUIRED)
+find_package(tf2_eigen REQUIRED)
 
 find_package(rosidl_default_generators REQUIRED)
 
@@ -56,7 +57,7 @@ set(DEPENDENCIES
   "std_srvs"
   "sensor_msgs"
   "moveit_core"
-  "moveit_planners_ompl"
+  "moveit_planners"
   "moveit_ros_planning"
   "moveit_ros_planning_interface"
   "control_msgs"
@@ -64,6 +65,7 @@ set(DEPENDENCIES
   "elfin_robot_msgs"
   "tf2"
   "tf2_ros"
+  "tf2_eigen"
 )
 
 ament_target_dependencies(${PROJECT_NAME}_lib ${DEPENDENCIES})

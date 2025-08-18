@@ -203,7 +203,7 @@ void ElfinMotionAPI::cartPathGoalCB(const geometry_msgs::msg::PoseArray::SharedP
     {
         RCLCPP_INFO(motion_nh_->get_logger(),"the cartesian path can be %.2f%% acheived", fraction * 100.0);
         trajectoryScaling(cart_path, velocity_scaling_);
-        cart_plan.trajectory_=cart_path;
+        cart_plan.trajectory=cart_path;
         group_->asyncExecute(cart_plan);
     }
     else
@@ -273,7 +273,7 @@ bool ElfinMotionAPI::updateTransforms(std::string ref_link)
   while(rclcpp::ok())
   {
       try{
-        tfBuffer->canTransform(ref_link, root_link_, rclcpp::Time(0), rclcpp::Duration(10.0));
+        tfBuffer->canTransform(ref_link, root_link_, rclcpp::Time(0), rclcpp::Duration::from_seconds(10.0));
         transform_rootToRef_ = tfBuffer->lookupTransform(ref_link, root_link_, rclcpp::Time(0));
         break;
       }
@@ -294,7 +294,7 @@ bool ElfinMotionAPI::updateTransforms(std::string ref_link)
   while(rclcpp::ok())
   {
       try{
-        tfBuffer->canTransform(end_link_, default_tip_link_, rclcpp::Time(0), rclcpp::Duration(10.0));
+        tfBuffer->canTransform(end_link_, default_tip_link_, rclcpp::Time(0), rclcpp::Duration::from_seconds(10.0));
         transform_tipToEnd_ = tfBuffer->lookupTransform(end_link_, default_tip_link_, rclcpp::Time(0));
         break;
       }

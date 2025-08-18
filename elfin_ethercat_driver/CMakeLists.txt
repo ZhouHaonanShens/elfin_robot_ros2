@@ -109,10 +109,19 @@ install(TARGETS  ${EXECUTABLE_NAME}
 )
 
 install(
-    DIRECTORY 
-    # launch
-    DESTINATION 
-    share/${PROJECT_NAME}
+    DIRECTORY include/
+    DESTINATION include
 )
+
+install(TARGETS ${PROJECT_NAME}_lib
+  EXPORT export_${PROJECT_NAME}
+  ARCHIVE DESTINATION lib
+  LIBRARY DESTINATION lib
+  RUNTIME DESTINATION bin
+)
+
+ament_export_include_directories(include)
+ament_export_libraries(${PROJECT_NAME}_lib)
+ament_export_dependencies(${DEPENDENCIES})
 
 ament_package()

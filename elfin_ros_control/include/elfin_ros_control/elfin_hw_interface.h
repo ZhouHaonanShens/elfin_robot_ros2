@@ -19,20 +19,17 @@
 #include <sensor_msgs/msg/joint_state.hpp>
 #include <controller_manager/controller_manager.hpp>
 #include <std_msgs/msg/float64.hpp>
-#include <hardware_interface/base_interface.hpp>
 #include <hardware_interface/system_interface.hpp>
 #include <hardware_interface/types/hardware_interface_type_values.hpp>
 #include "visibility_control.h"
-
-#include <hardware_interface/visibility_control.h>
 #include <hardware_interface/hardware_info.hpp>
 #include <hardware_interface/types/hardware_interface_return_values.hpp>
-#include <hardware_interface/types/hardware_interface_status_values.hpp>
 #include <rclcpp/logger.hpp>
 #include <rclcpp/macros.hpp>
 
 // using namespace ELFIN;
 using hardware_interface::return_type;
+using hardware_interface::CallbackReturn;
 
 namespace elfin_hardware_interface
 {
@@ -64,14 +61,14 @@ typedef struct{
     AxisInfo axis2;
 }ModuleInfo;
 
-class ElfinHWInterface : public hardware_interface::BaseInterface<hardware_interface::SystemInterface>
+class ElfinHWInterface : public hardware_interface::SystemInterface
 {
 public:
 
   RCLCPP_SHARED_PTR_DEFINITIONS(ElfinHWInterface)
 
   // ELFIN_HARDWARE_INTERFACE_PUBLIC
-  return_type configure(const hardware_interface::HardwareInfo& info) override;
+  CallbackReturn on_init(const hardware_interface::HardwareInfo& info) override;
 
   // ELFIN_HARDWARE_INTERFACE_PUBLIC
   std::vector<hardware_interface::StateInterface> export_state_interfaces() override;
@@ -87,16 +84,16 @@ public:
   return_type perform_command_mode_switch(const std::vector<std::string>&, const std::vector<std::string>&) override;
 
   // ELFIN_HARDWARE_INTERFACE_PUBLIC
-  return_type start() override;
+  CallbackReturn on_activate(const rclcpp_lifecycle::State& previous_state) override;
 
   // ELFIN_HARDWARE_INTERFACE_PUBLIC
-  return_type stop() override;
+  CallbackReturn on_deactivate(const rclcpp_lifecycle::State& previous_state) override;
 
   // ELFIN_HARDWARE_INTERFACE_PUBLIC
-  return_type read() override;
+  return_type read(const rclcpp::Time& time, const rclcpp::Duration& period) override;
 
   // ELFIN_HARDWARE_INTERFACE_PUBLIC
-  return_type write() override;
+  return_type write(const rclcpp::Time& time, const rclcpp::Duration& period) override;
 
 private:
 

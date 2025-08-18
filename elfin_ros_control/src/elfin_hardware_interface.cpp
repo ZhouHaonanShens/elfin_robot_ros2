@@ -73,9 +73,10 @@ namespace elfin_hardware_interface{
             return false;
         }
     }
+    return true;
   }
 
-  return_type ElfinHWInterface::configure(const hardware_interface::HardwareInfo & info)
+  CallbackReturn ElfinHWInterface::on_init(const hardware_interface::HardwareInfo & info)
   {
     n_ = rclcpp::Node::make_shared("elfin_hw");
     std::vector<std::string> elfin_driver_names_default;
@@ -172,7 +173,7 @@ namespace elfin_hardware_interface{
     // {
     //   ethercat_drivers_[i]->enableRobot_test();
     // }
-    return return_type::OK;
+    return CallbackReturn::SUCCESS;
   }
 
   std::vector<hardware_interface::StateInterface> ElfinHWInterface::export_state_interfaces()
@@ -252,18 +253,18 @@ namespace elfin_hardware_interface{
     return return_type::OK;
   }
 
-  return_type ElfinHWInterface::start()
+  CallbackReturn ElfinHWInterface::on_activate(const rclcpp_lifecycle::State& previous_state)
   {
-    read();
-    status_ = hardware_interface::status::STARTED;
-    RCLCPP_INFO(n_->get_logger(),"Started");
-    return return_type::OK;
+    (void)previous_state;
+    read(n_->now(), rclcpp::Duration(0, 0));
+    RCLCPP_INFO(n_->get_logger(),"Activated");
+    return CallbackReturn::SUCCESS;
   }
 
-  return_type ElfinHWInterface::stop()
+  CallbackReturn ElfinHWInterface::on_deactivate(const rclcpp_lifecycle::State& previous_state)
   {
-    RCLCPP_INFO(n_->get_logger(),"trying to Stop");
-    status_ = hardware_interface::status::STOPPED;
+    (void)previous_state;
+    RCLCPP_INFO(n_->get_logger(),"trying to Deactivate");
     for(unsigned int i=0;i<ethercat_drivers_.size();i++)
     {
       if(ethercat_drivers_[i]!=NULL)
@@ -271,12 +272,14 @@ namespace elfin_hardware_interface{
         delete ethercat_drivers_[i];
       }
     }
-    RCLCPP_INFO(n_->get_logger(), "Stopped");
-    return return_type::OK;
+    RCLCPP_INFO(n_->get_logger(), "Deactivated");
+    return CallbackReturn::SUCCESS;
   }
 
-  return_type ElfinHWInterface::read()
+  return_type ElfinHWInterface::read(const rclcpp::Time& time, const rclcpp::Duration& period)
   {
+    (void)time;
+    (void)period;
     rclcpp::spin_some(n_);
     for(size_t i=0;i<module_infos_.size();i++)
     {
@@ -315,8 +318,10 @@ namespace elfin_hardware_interface{
     return return_type::OK;
   }
 
-  return_type ElfinHWInterface::write()
+  return_type ElfinHWInterface::write(const rclcpp::Time& time, const rclcpp::Duration& period)
   {
+    (void)time;
+    (void)period;
     for(size_t i =0;i<module_infos_.size();i++)
     {
 

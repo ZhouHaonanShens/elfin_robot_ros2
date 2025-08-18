@@ -13,12 +13,13 @@
 namespace elfin_hardware_interface
 {
 
-hardware_interface::return_type ElfinHWInterface_PositoinOnly::configure(
+hardware_interface::CallbackReturn ElfinHWInterface_PositoinOnly::on_init(
   const hardware_interface::HardwareInfo & info)
 {
-   if (configure_default(info) != hardware_interface::return_type::OK)
+   info_ = info;
+   if (info_.joints.size() == 0)
   {
-    return hardware_interface::return_type::ERROR;
+    return hardware_interface::CallbackReturn::ERROR;
   }
   hw_start_sec_ = stod(info_.hardware_parameters["example_param_hw_start_duration_sec"]);
   hw_stop_sec_ = stod(info_.hardware_parameters["example_param_hw_stop_duration_sec"]);
@@ -47,7 +48,7 @@ hardware_interface::return_type ElfinHWInterface_PositoinOnly::configure(
         rclcpp::get_logger("ElfinHWInterface_PositoinOnly"),
         "Joint '%s' has %d command interfaces found. 1 expected.", joint.name.c_str(),
         joint.command_interfaces.size());
-      return hardware_interface::return_type::ERROR;
+      return hardware_interface::CallbackReturn::ERROR;
     }
 
     if (joint.command_interfaces[0].name != hardware_interface::HW_IF_POSITION)
@@ -56,7 +57,7 @@ hardware_interface::return_type ElfinHWInterface_PositoinOnly::configure(
         rclcpp::get_logger("ElfinHWInterface_PositoinOnly"),
         "Joint '%s' have %s command interfaces found. '%s' expected.", joint.name.c_str(),
         joint.command_interfaces[0].name.c_str(), hardware_interface::HW_IF_POSITION);
-      return hardware_interface::return_type::ERROR;
+      return hardware_interface::CallbackReturn::ERROR;
     }
 
     if (joint.state_interfaces.size() != 1)
@@ -65,7 +66,7 @@ hardware_interface::return_type ElfinHWInterface_PositoinOnly::configure(
         rclcpp::get_logger("ElfinHWInterface_PositoinOnly"),
         "Joint '%s' has %d state interface. 1 expected.", joint.name.c_str(),
         joint.state_interfaces.size());
-      return hardware_interface::return_type::ERROR;
+      return hardware_interface::CallbackReturn::ERROR;
     }
 
     if (joint.state_interfaces[0].name != hardware_interface::HW_IF_POSITION)
@@ -74,12 +75,11 @@ hardware_interface::return_type ElfinHWInterface_PositoinOnly::configure(
         rclcpp::get_logger("ElfinHWInterface_PositoinOnly"),
         "Joint '%s' have %s state interface. '%s' expected.", joint.name.c_str(),
         joint.state_interfaces[0].name.c_str(), hardware_interface::HW_IF_POSITION);
-      return hardware_interface::return_type::ERROR;
+      return hardware_interface::CallbackReturn::ERROR;
     }
   }
 
-  status_ = hardware_interface::status::CONFIGURED;
-  return hardware_interface::return_type::OK;
+  return hardware_interface::CallbackReturn::SUCCESS;
 }
 
 std::vector<hardware_interface::StateInterface>
@@ -108,10 +108,11 @@ ElfinHWInterface_PositoinOnly::export_command_interfaces()
   return command_interfaces;
 }
 
-hardware_interface::return_type ElfinHWInterface_PositoinOnly::start()
+hardware_interface::CallbackReturn ElfinHWInterface_PositoinOnly::on_activate(const rclcpp_lifecycle::State& previous_state)
 {
+  (void)previous_state;
   n_ = rclcpp::Node::make_shared("elfin_hw");
-  read();
+  read(n_->now(), rclcpp::Duration(0, 0));
   RCLCPP_INFO(rclcpp::get_logger("ElfinHWInterface_PositoinOnly"), "Starting ...please wait...");
 
   for (int i = 0; i < hw_start_sec_; i++)
@@ -136,16 +137,15 @@ hardware_interface::return_type ElfinHWInterface_PositoinOnly::start()
     }
   }
 
-  status_ = hardware_interface::status::STARTED;
-
   RCLCPP_INFO(
     rclcpp::get_logger("ElfinHWInterface_PositoinOnly"), "System Successfully started!");
 
-  return hardware_interface::return_type::OK;
+  return hardware_interface::CallbackReturn::SUCCESS;
 }
 
-hardware_interface::return_type ElfinHWInterface_PositoinOnly::stop()
+hardware_interface::CallbackReturn ElfinHWInterface_PositoinOnly::on_deactivate(const rclcpp_lifecycle::State& previous_state)
 {
+  (void)previous_state;
   RCLCPP_INFO(rclcpp::get_logger("ElfinHWInterface_PositoinOnly"), "Stopping ...please wait...");
 
   for (int i = 0; i < hw_stop_sec_; i++)
@@ -156,16 +156,16 @@ hardware_interface::return_type ElfinHWInterface_PositoinOnly::stop()
       hw_stop_sec_ - i);
   }
 
-  status_ = hardware_interface::status::STOPPED;
-
   RCLCPP_INFO(
     rclcpp::get_logger("ElfinHWInterface_PositoinOnly"), "System successfully stopped!");
 
-  return hardware_interface::return_type::OK;
+  return hardware_interface::CallbackReturn::SUCCESS;
 }
 
-hardware_interface::return_type ElfinHWInterface_PositoinOnly::read()
+hardware_interface::return_type ElfinHWInterface_PositoinOnly::read(const rclcpp::Time& time, const rclcpp::Duration& period)
 {
+  (void)time;
+  (void)period;
   rclcpp::spin_some(n_);
   for (uint i = 0; i < hw_states_.size(); i++)
   {
@@ -189,8 +189,10 @@ hardware_interface::return_type ElfinHWInterface_PositoinOnly::read()
   return hardware_interface::return_type::OK;
 }
 
-hardware_interface::return_type ElfinHWInterface_PositoinOnly::write()
+hardware_interface::return_type ElfinHWInterface_PositoinOnly::write(const rclcpp::Time& time, const rclcpp::Duration& period)
 {
+    (void)time;
+    (void)period;
     bool new_data_available = false;
     std::function<double(double, double)> substractor = [](double a, double b) { return std::abs(a - b); };
     std::vector<double> pos_diff;
