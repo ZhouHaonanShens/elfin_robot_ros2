@@ -49,8 +49,8 @@ def generate_launch_description():
     # DECLARE Gazebo LAUNCH file:
     gazebo = IncludeLaunchDescription(
                 PythonLaunchDescriptionSource([os.path.join(
-                    get_package_share_directory('gazebo_ros'), 'launch'), '/gazebo.launch.py']),
-                launch_arguments={'world': elfin10_ros2_gazebo}.items(),
+                    get_package_share_directory('ros_gz_sim'), 'launch'), '/gz_sim.launch.py']),
+                launch_arguments={'gz_args': f'-r {elfin10_ros2_gazebo}'}.items(),
              )
 
     # ***** ROBOT DESCRIPTION ***** #
@@ -68,9 +68,9 @@ def generate_launch_description():
         ' use_real_hardware:=false',])
     robot_description = {'robot_description': robot_description_config}
     # SPAWN ROBOT TO GAZEBO:
-    spawn_entity = Node(package='gazebo_ros', executable='spawn_entity.py',
+    spawn_entity = Node(package='ros_gz_sim', executable='create',
                         arguments=['-topic', 'robot_description',
-                                   '-entity', 'elfin10',"-x", "0.0", "-y", "0.0", "-z", "0.1"],
+                                   '-name', 'elfin10',"-x", "0.0", "-y", "0.0", "-z", "0.1"],
                         output='screen')
 
     # ***** STATIC TRANSFORM ***** #
@@ -126,7 +126,7 @@ def generate_launch_description():
     ]:
         load_controllers += [
             ExecuteProcess(
-                cmd=["ros2 run controller_manager spawner.py {}".format(controller)],
+                cmd=["ros2 run controller_manager spawner {}".format(controller)],
                 shell=True,
                 output="screen",
             )

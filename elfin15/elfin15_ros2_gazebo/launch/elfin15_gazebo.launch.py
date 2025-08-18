@@ -49,8 +49,8 @@ def generate_launch_description():
     # DECLARE Gazebo LAUNCH file:
     gazebo = IncludeLaunchDescription(
                 PythonLaunchDescriptionSource([os.path.join(
-                    get_package_share_directory('gazebo_ros'), 'launch'), '/gazebo.launch.py']),
-                launch_arguments={'world': elfin15_ros2_gazebo}.items(),
+                    get_package_share_directory('ros_gz_sim'), 'launch'), '/gz_sim.launch.py']),
+                launch_arguments={'gz_args': f'-r {elfin15_ros2_gazebo}'}.items(),
              )
 
     # ***** ROBOT DESCRIPTION ***** #
@@ -77,15 +77,15 @@ def generate_launch_description():
     )
 
     # SPAWN ROBOT TO GAZEBO:
-    spawn_entity = Node(package='gazebo_ros', executable='spawn_entity.py',
+    spawn_entity = Node(package='ros_gz_sim', executable='create',
                         arguments=['-topic', 'robot_description',
-                                   '-entity', 'elfin15',"-x", "0.0", "-y", "0.0", "-z", "0.1"],
+                                   '-name', 'elfin15',"-x", "0.0", "-y", "0.0", "-z", "0.1"],
                         output='screen')
 
     # ***** CONTROLLERS ***** #
     # Joint STATE Controller:
     load_joint_state_controller = ExecuteProcess(
-        cmd=['ros2', 'control', 'load_start_controller', 'joint_state_controller'],
+        cmd=['ros2', 'control', 'load_start_controller', 'joint_state_broadcaster'],
         output='screen'
     )
     # Joint TRAJECTORY Controller:

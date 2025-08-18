@@ -49,8 +49,8 @@ def generate_launch_description():
     # DECLARE Gazebo LAUNCH file:
     gazebo = IncludeLaunchDescription(
                 PythonLaunchDescriptionSource([os.path.join(
-                    get_package_share_directory('gazebo_ros'), 'launch'), '/gazebo.launch.py']),
-                launch_arguments={'world': elfin10_ros2_gazebo}.items(),
+                    get_package_share_directory('ros_gz_sim'), 'launch'), '/gz_sim.launch.py']),
+                launch_arguments={'gz_args': f'-r {elfin10_ros2_gazebo}'}.items(),
              )
 
     # ***** ROBOT DESCRIPTION ***** #
@@ -77,20 +77,20 @@ def generate_launch_description():
     )
 
     # SPAWN ROBOT TO GAZEBO:
-    spawn_entity = Node(package='gazebo_ros', executable='spawn_entity.py',
+    spawn_entity = Node(package='ros_gz_sim', executable='create',
                         arguments=['-topic', 'robot_description',
-                                   '-entity', 'elfin10',"-x", "0.0", "-y", "0.0", "-z", "0.1"],
+                                   '-name', 'elfin10',"-x", "0.0", "-y", "0.0", "-z", "0.1"],
                         output='screen')
 
     # ***** CONTROLLERS ***** #
     # Joint STATE Controller:
     load_joint_state_controller = ExecuteProcess(
-        cmd=['ros2', 'control', 'load_start_controller', 'joint_state_controller'],
+        cmd=['ros2', 'control', 'load_controller', '--set-state', 'active', 'joint_state_broadcaster'],
         output='screen'
     )
     # Joint TRAJECTORY Controller:
     load_joint_trajectory_controller = ExecuteProcess(
-        cmd=['ros2', 'control', 'load_start_controller', 'joint_trajectory_controller'],
+        cmd=['ros2', 'control', 'load_controller', '--set-state', 'active', 'elfin_arm_controller'],
         output='screen'
     )
 
@@ -98,5 +98,17 @@ def generate_launch_description():
     return LaunchDescription([
         gazebo, 
         node_robot_state_publisher,
-        spawn_entity
+        spawn_entity,
+        RegisterEventHandler(
+            event_handler=OnProcessExit(
+                target_action=spawn_entity,
+                on_exit=[load_joint_state_controller],
+            )
+        ),
+        RegisterEventHandler(
+            event_handler=OnProcessExit(
+                target_action=load_joint_state_controller,
+                on_exit=[load_joint_trajectory_controller],
+            )
+        ),
     ])
