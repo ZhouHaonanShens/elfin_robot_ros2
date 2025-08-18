@@ -4,8 +4,9 @@
 
 **名称**: elfin_robot_ros2  
 **类型**: 工业机器人ROS2控制系统  
-**版本**: ROS2 Jazzy (迁移自Foxy)  
+**版本**: ROS2 Jazzy (Ubuntu 24.04)  
 **硬件**: Elfin系列协作机器人 (3/5/10/15kg负载)  
+**主分支**: `jazzy` (默认开发分支)  
 
 ## 核心架构
 
@@ -68,7 +69,13 @@ source install/setup.bash
 
 ### 仿真测试
 ```bash
-# 启动Gazebo仿真 + MoveIt2
+# 设置Gazebo环境（重要！）
+source setup_gazebo_env.sh
+
+# 启动Gazebo仿真
+ros2 launch elfin10_ros2_gazebo elfin10_gazebo.launch.py
+
+# 或启动仿真 + MoveIt2
 ros2 launch elfin5_ros2_moveit2 elfin5.launch.py
 
 # 启动基础API
@@ -127,13 +134,37 @@ A: 检查网络接口名称，修改 `elfin_ethernet_name` 参数
 ### Q: 轨迹执行抖动
 A: 确认使用PREEMPT_RT内核，提高进程优先级
 
+### Q: Gazebo仿真中机器人倒塌
+A: 确保运行 `source setup_gazebo_env.sh` 设置环境变量，gz_ros2_control插件需要正确的库路径
+
 ## 迁移记录
 
-### Foxy -> Jazzy (2025-08)
-- 修改文件数: 4个
-- 代码改动: <50行
-- API变化: 0
-- 测试状态: 待硬件验证
+### Foxy -> Jazzy (2025-08-18)
+
+#### 主要变更
+1. **核心包迁移**
+   - C++标准升级到C++17
+   - rclcpp API更新（spin_until_future_complete添加超时参数）
+   - hardware_interface API变化（read/write函数签名）
+   - 修复编译错误和链接问题
+
+2. **Gazebo迁移**
+   - 从Gazebo Classic迁移到新Gazebo（Ignition）
+   - 更新所有launch文件使用ros_gz_sim
+   - 替换spawn_entity为create节点
+   - 修复world文件的model URI
+
+3. **gz_ros2_control集成**
+   - 解决插件加载失败问题（属性顺序bug）
+   - 更新控制器类型（joint_state_broadcaster）
+   - 添加环境配置脚本setup_gazebo_env.sh
+   - 修复机器人仿真倒塌问题
+
+#### 统计
+- 修改文件数: 57个
+- 代码改动: 497 insertions(+), 235 deletions(-)
+- API兼容性: 100%保持
+- 测试状态: 仿真✅ 硬件待验证
 
 ## 维护者
 

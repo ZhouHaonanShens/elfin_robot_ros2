@@ -11,6 +11,14 @@ Chinese version of the README -> please [click here](./README_cn.md)
 
 This repository provides ROS2 support for the Elfin Robot. The recommend operating environment is on Ubuntu 24.04 with ROS Jazzy. So far These packages haven't been tested in other environment.
 
+## Branch Information
+
+- **`jazzy`** (default): ROS2 Jazzy support for Ubuntu 24.04 - Active development branch
+- **`foxy_ethercat`**: Legacy ROS2 Foxy support - For historical reference only
+- **`foxy`**: Original ROS2 Foxy branch - Archived
+
+Please use the `jazzy` branch for all new development and deployments.
+
 ### Installation
 
 #### Ubuntu 24.04 + ROS Jazzy
