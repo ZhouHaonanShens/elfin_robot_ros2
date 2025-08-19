@@ -87,6 +87,9 @@ ros2 launch elfin_basic_api fake_elfin_gui.launch.py
 
 ### 硬件运行
 ```bash
+# 配置网络接口（首次连接）
+sudo ./scripts/setup_network.sh
+
 # 需要实时内核和root权限
 sudo chrt 10 bash
 ros2 launch elfin5_ros2_moveit2 elfin5_moveit.launch.py
@@ -100,6 +103,11 @@ sudo ros2 launch elfin5_ros2_moveit2 elfin5_moveit_rviz.launch.py
 ### 配置文件
 - `elfin_robot_bringup/config/elfin_arm_control.yaml` - 硬件配置
 - `elfin_robot_bringup/config/elfin_drivers.yaml` - 驱动参数(供应商提供)
+
+### 脚本文件
+- `scripts/setup_network.sh` - 网络接口配置脚本（连接机械臂）
+- `scripts/setup_gazebo_env.sh` - Gazebo环境变量设置
+- `scripts/install_jazzy.sh` - 依赖安装脚本
 
 ### 启动文件
 - `*_moveit.launch.py` - 硬件控制启动
