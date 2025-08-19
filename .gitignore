@@ -1,0 +1,87 @@
+# ROS2 build artifacts
+build/
+install/
+log/
+
+# Colcon specific
+.colcon/
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+
+# C++ build artifacts
+*.o
+*.obj
+*.so
+*.dylib
+*.dll
+*.exe
+*.out
+*.app
+
+# IDE specific files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Documentation build
+docs/_build/
+docs/_static/
+docs/_templates/
+
+# Temporary files
+*.tmp
+*.bak
+*.backup
+*.log
+*.pid
+
+# ROS specific
+*.bag
+*.db3
+*.db3-shm
+*.db3-wal
+
+# Qt Creator
+*.user
+*.user.*
+
+# CMake
+CMakeCache.txt
+CMakeFiles/
+cmake-build-*/
+
+# Catkin tools (legacy, but just in case)
+devel/
+.catkin_tools/
+
+# Local configuration files (do not commit local settings)
+*.local
+.env
+
+# Jupyter Notebook
+.ipynb_checkpoints/
+
+# pytest
+.pytest_cache/
+
+# Coverage reports
+htmlcov/
+.coverage
+.coverage.*
+coverage.xml
+*.cover
+
+# Distribution / packaging
+dist/
+eggs/
+.eggs/
+*.egg-info/
+*.egg
