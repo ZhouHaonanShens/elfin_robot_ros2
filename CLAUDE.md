@@ -70,7 +70,7 @@ source install/setup.bash
 ### 仿真测试
 ```bash
 # 设置Gazebo环境（重要！）
-source setup_gazebo_env.sh
+source scripts/setup_gazebo_env.sh
 
 # 启动Gazebo仿真
 ros2 launch elfin10_ros2_gazebo elfin10_gazebo.launch.py
@@ -126,7 +126,7 @@ sudo ros2 launch elfin5_ros2_moveit2 elfin5_moveit_rviz.launch.py
 ## 常见问题
 
 ### Q: 编译失败
-A: 运行 `./install_jazzy.sh` 安装依赖
+A: 运行 `./scripts/install_jazzy.sh` 安装依赖
 
 ### Q: 硬件连接失败
 A: 检查网络接口名称，修改 `elfin_ethernet_name` 参数
@@ -135,7 +135,7 @@ A: 检查网络接口名称，修改 `elfin_ethernet_name` 参数
 A: 确认使用PREEMPT_RT内核，提高进程优先级
 
 ### Q: Gazebo仿真中机器人倒塌
-A: 确保运行 `source setup_gazebo_env.sh` 设置环境变量，gz_ros2_control插件需要正确的库路径
+A: 确保运行 `source scripts/setup_gazebo_env.sh` 设置环境变量，gz_ros2_control插件需要正确的库路径
 
 ## 迁移记录
 
@@ -176,3 +176,4 @@ A: 确保运行 `source setup_gazebo_env.sh` 设置环境变量，gz_ros2_contro
 *"Bad programmers worry about the code. Good programmers worry about data structures."* - Linus Torvalds
 
 本项目专注于数据流的稳定性和实时性，而非代码的优雅性。
+- 各种不同类型的文件应该放在正确的文件夹, 比如文档类放在docs, 日志类放在log, 脚本类放在scripts, launch类放在launch
